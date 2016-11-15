@@ -30,7 +30,7 @@ using CoiniumServ.Server.Web.Models.Pool;
 using Nancy;
 using Nancy.CustomErrors;
 using Nancy.Helpers;
-
+using System.Linq;
 namespace CoiniumServ.Server.Web.Modules
 {
     public class PoolModule : NancyModule
@@ -74,6 +74,7 @@ namespace CoiniumServ.Server.Web.Modules
 
                 ViewBag.Header = string.Format("{0} Workers", pool.Config.Coin.Name);
 
+                
                 // return our view
                 return View["workers", new WorkersModel
                 {

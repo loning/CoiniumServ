@@ -159,10 +159,23 @@ namespace CoiniumServ.Payments
                         // see if user payout address is directly payable from the pool's main daemon connection
                         // which happens when a user connects an XYZ pool and want his payments in XYZ coin.
 
-                        var result = _daemonClient.ValidateAddress(user.Address); // does the user have a directly payable address set?
 
-                        if (!result.IsValid) // if not skip the payment and let it handled by auto-exchange module.
-                            continue;
+                        if (user.Address.Length < 40)
+                        {
+                            var result = _daemonClient.ValidateAddress(user.Address);
+                            // does the user have a directly payable address set?
+
+                            if (!result.IsValid) // if not skip the payment and let it handled by auto-exchange module.
+                                continue;
+                        }
+                        else
+                        {
+                            var result = _daemonClient.MakeRawRequest("z_validateaddress", user.Address);
+                            var json = JObject.Parse(result);
+                            if (!(bool)json["result"]["isvalid"])
+                                continue;
+                        }
+
 
                         perUserTransactions.Add(user.Username, new List<ITransaction>());
                     }
