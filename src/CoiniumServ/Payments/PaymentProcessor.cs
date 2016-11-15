@@ -121,7 +121,25 @@ namespace CoiniumServ.Payments
 
         private IEnumerable<KeyValuePair<string, List<ITransaction>>> GetTransactionCandidates()
         {
-            var pendingPayments = _storageLayer.GetPendingPayments(); // get all pending payments.
+            var zBalance = this.GetZBalance(_poolZAddress);
+
+
+            decimal amount = 0;
+            var pendingPayments = _storageLayer.GetPendingPayments()
+                .Where(p =>
+                {
+                    if (amount + p.Amount > zBalance - 0.001M)
+                    {
+                        return false;
+                    }
+                    amount += p.Amount;
+                    return true;
+                }).ToList(); // get all pending payments.
+
+
+
+
+
             var perUserTransactions = new Dictionary<string, List<ITransaction>>();  // list of payments to be executed.
 
             foreach (var payment in pendingPayments)
@@ -174,7 +192,7 @@ namespace CoiniumServ.Payments
                 var balance = GetZBalance(_poolConfig.Wallet.Adress);
                 if (balance > 0)
                 {
-                    dic.Add(new SendMany() { address = _poolZAddress, amount = balance - 0.0001M });
+                    dic.Add(new SendMany() { address = _poolZAddress, amount = balance - 0.001M });
 
                     _daemonClient.MakeRawRequest("z_sendmany", _poolConfig.Wallet.Adress, dic);
                 }
@@ -189,7 +207,7 @@ namespace CoiniumServ.Payments
 
                 // filter out users whom total amount doesn't exceed the configured minimum payment amount.
                 var filtered = paymentsToExecute
-                    
+
                     .Where(
                     x =>
                     {
