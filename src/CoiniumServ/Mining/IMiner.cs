@@ -77,5 +77,7 @@ namespace CoiniumServ.Mining
         /// <param name="password"></param>
         /// <returns></returns>
         bool Authenticate(string user, string password);
+
+        string WorkerTag { get; }
     }
 }

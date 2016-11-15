@@ -188,7 +188,9 @@ namespace CoiniumServ.Payments
                 decimal total = 0;
 
                 // filter out users whom total amount doesn't exceed the configured minimum payment amount.
-                var filtered = paymentsToExecute.Where(
+                var filtered = paymentsToExecute
+                    
+                    .Where(
                     x =>
                     {
                         var sum = x.Value.Sum(y => y.Payment.Amount);
@@ -199,7 +201,7 @@ namespace CoiniumServ.Payments
 
                         return sum >= (decimal)_poolConfig.Payments.Minimum;
                     })
-                        .ToDictionary(x => x.Key, x => x.Value);
+                .ToDictionary(x => x.Key, x => x.Value);
 
                 if (filtered.Count <= 0)  // make sure we have payments to execute even after our filter.
                     return executed;

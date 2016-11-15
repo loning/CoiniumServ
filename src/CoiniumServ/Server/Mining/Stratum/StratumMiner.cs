@@ -159,7 +159,16 @@ namespace CoiniumServ.Server.Mining.Stratum
         /// <returns></returns>
         public bool Authenticate(string user, string password)
         {
-            Username = user;
+            if (user != null && user.Contains("."))
+            {
+                Username = user.Substring(0, user.IndexOf(".", StringComparison.Ordinal));
+                WorkerTag = user.Substring(Username.Length + 1);
+            }
+            else
+            {
+                Username = user;
+            }
+
             _minerManager.Authenticate(this);
 
             if (!Authenticated)
@@ -167,6 +176,8 @@ namespace CoiniumServ.Server.Mining.Stratum
 
             return Authenticated;
         }
+
+        public string WorkerTag { get; private set; }
 
         /// <summary>
         /// Subscribes the miner to mining service.

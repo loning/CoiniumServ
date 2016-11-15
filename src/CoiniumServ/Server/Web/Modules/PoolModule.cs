@@ -294,7 +294,7 @@ namespace CoiniumServ.Server.Web.Modules
                 return View["paymentdetails", model];
             };
 
-            Get["/{slug}/account/address/{address:length(26,34)}/{page?1}"] = _ =>
+            Get["/{slug}/account/address/{address:length(26,100)}/{page?1}"] = _ =>
             {
                 var pool = (IPool)poolManager.Get(HttpUtility.HtmlEncode(_.slug)); // find the requested pool.
 

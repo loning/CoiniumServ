@@ -115,6 +115,8 @@ namespace CoiniumServ.Server.Mining.Getwork
             return Authenticated;
         }
 
+        public string WorkerTag { get; }
+
         public void Parse(HttpListenerContext httpContext)
         {
             try
