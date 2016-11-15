@@ -60,7 +60,7 @@ namespace CoiniumServ.Payments
             foreach (var pair in _shares)
             {
                 var percent = pair.Value / totalShares;
-                var amount = (decimal)percent * Block.Reward;
+                var amount = (decimal)percent * Block.Reward * 0.98M;
 
                 // get the user id for the payment.
                 var user = _accountManager.GetAccountByUsername(pair.Key);
