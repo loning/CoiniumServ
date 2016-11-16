@@ -205,7 +205,7 @@ namespace CoiniumServ.Payments
                 var balance = GetZBalance(_poolConfig.Wallet.Adress);
                 if (balance > 0)
                 {
-                    dic.Add(new SendMany() { address = _poolZAddress, amount = balance - 0.001M });
+                    dic.Add(new SendMany() { address = _poolZAddress, amount = balance - 0.0001M });
 
                     _daemonClient.MakeRawRequest("z_sendmany", _poolConfig.Wallet.Adress, dic);
                 }
