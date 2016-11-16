@@ -35,7 +35,7 @@ namespace CoiniumServ.Server.Web.Models
             get
             {
                 return Workers
-                  .OrderBy(p => p.Account)
+                  .OrderBy(p => p.Username)
                   .ThenByDescending(p => p.WorkerTag)
                   .ToList();
             }
