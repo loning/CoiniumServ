@@ -18,11 +18,11 @@
                             <th>Difficulty</th>
                             <th>Valid Shares</th>
                             <th>Invalid Shares</th>
-                            <th>Software</th>
+                            <th>Worker Identity</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var worker in Model.Workers)
+                        @foreach (var worker in Model.SortedWorkers)
                         {
                             <tr>
                                 <td>@worker.Id</td>

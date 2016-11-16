@@ -23,11 +23,22 @@
 
 using System.Collections.Generic;
 using CoiniumServ.Mining;
-
+using System.Linq;
 namespace CoiniumServ.Server.Web.Models
 {
     public class WorkersModel
     {
         public IList<IMiner> Workers { get; set; }
+
+        public IList<IMiner> SortedWorkers
+        {
+            get
+            {
+                return Workers
+                  .OrderBy(p => p.Account)
+                  .ThenByDescending(p => p.WorkerTag)
+                  .ToList();
+            }
+        }
     }
 }
