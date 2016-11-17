@@ -21,6 +21,7 @@
 // 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -78,8 +79,12 @@ namespace CoiniumServ.Payments
             catch (RpcException e)
             {
                 _logger.Error("Error getting z balance for pool central wallet: {0:l} - {1:l}", address, e.Message);
-                throw;
             }
+            catch (Exception e)
+            {
+                _logger.Error("Error getting z balance for pool central wallet: {0:l} - {1:l}", address, e.Message);
+            }
+            return 0;
         }
 
         public PaymentProcessor(IPoolConfig poolConfig, IStorageLayer storageLayer, IDaemonClient daemonClient, IAccountManager accountManager)
@@ -121,8 +126,9 @@ namespace CoiniumServ.Payments
 
         private IEnumerable<KeyValuePair<string, List<ITransaction>>> GetTransactionCandidates()
         {
-            var zBalance = this.GetZBalance(_poolZAddress);
 
+
+            var zBalance = this.GetZBalance(_poolZAddress);
 
             decimal amount = 0;
             var pendingPayments = _storageLayer.GetPendingPayments()
@@ -136,11 +142,8 @@ namespace CoiniumServ.Payments
                     return true;
                 }).ToList(); // get all pending payments.
 
-
-
-
-
             var perUserTransactions = new Dictionary<string, List<ITransaction>>();  // list of payments to be executed.
+
 
             foreach (var payment in pendingPayments)
             {
