@@ -173,10 +173,18 @@ namespace CoiniumServ.Payments
                         }
                         else
                         {
-                            var result = _daemonClient.MakeRawRequest("z_validateaddress", user.Address);
-                            var json = JObject.Parse(result);
-                            if (!(bool)json["result"]["isvalid"])
+                            try
+                            {
+                                var result = _daemonClient.MakeRawRequest("z_validateaddress", user.Address);
+                                var json = JObject.Parse(result);
+                                if (!(bool) json["result"]["isvalid"])
+                                    continue;
+                            }
+                            catch (Exception)
+                            {
+                                //just ignore
                                 continue;
+                            }
                         }
 
 
