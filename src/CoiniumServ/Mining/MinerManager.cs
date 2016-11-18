@@ -155,8 +155,6 @@ namespace CoiniumServ.Mining
             {
                 var stratumMiner = (IStratumMiner) miner;
 
-                var bits = AlgorithmManager.Diff1 * new BigRational(_poolConfig.Stratum.Diff);
-
                 stratumMiner.SetDifficulty(_poolConfig.Stratum.Diff); // set the initial difficulty for the miner and send it.
                 
 

@@ -49,6 +49,7 @@ namespace CoiniumServ.Algorithms
         public const string X14 = "x14";
         public const string X15 = "x15";
         public const string X17 = "x17";
+        public const string Equihash = "equihash";
 
         // todo: add hefty1, qubit support
 
@@ -68,6 +69,9 @@ namespace CoiniumServ.Algorithms
 
             // per-algorithm statistics
             _applicationContext.Container.Register<IHashAlgorithmStatistics, HashAlgorithmStatistics>().AsMultiInstance();
+
+
+            _applicationContext.Container.Register<IHashAlgorithm, Equihash>(Equihash).AsMultiInstance();
 
             // sha variants
             _applicationContext.Container.Register<IHashAlgorithm, Sha256>(Sha256).AsMultiInstance();

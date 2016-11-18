@@ -150,6 +150,7 @@
     <Compile Include="Algorithms\HashAlgorithmStatistics.cs" />
     <Compile Include="Algorithms\IHashAlgorithmStatistics.cs" />
     <Compile Include="Algorithms\Implementations\ScryptN.cs" />
+    <Compile Include="Algorithms\Implementations\Equihash.cs" />
     <Compile Include="Blocks\BlockProcessor.cs" />
     <Compile Include="Blocks\IBlockProcessor.cs" />
     <Compile Include="Coin\Address\Exceptions\AddressNotOwnedException.cs" />
