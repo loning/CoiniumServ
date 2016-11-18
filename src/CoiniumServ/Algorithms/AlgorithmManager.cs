@@ -76,7 +76,7 @@ namespace CoiniumServ.Algorithms
 
         static AlgorithmManager()
         {
-            Diff1 = BigInteger.Parse("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", NumberStyles.HexNumber);
+            Diff1 = BigInteger.Parse("07ffffffffff0000000000000000000000000000000000000000000000000000", NumberStyles.HexNumber);
         }
 
         public IQueryable<IHashAlgorithmStatistics> SearchFor(Expression<Func<IHashAlgorithmStatistics, bool>> predicate)
