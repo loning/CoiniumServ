@@ -92,5 +92,7 @@ namespace CoiniumServ.Shares
         byte[] BlockHash { get; }
 
         void SetFoundBlock(Block block, Transaction genTx);
+
+        void FillBlockHex();
     }
 }
