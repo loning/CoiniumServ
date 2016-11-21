@@ -1008,6 +1008,7 @@
     <None Include="web\default\Content\js\custom.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Content Include="web\default\Content\img\coins\icon\DWC.png" />
     <Content Include="web\default\Content\js\jquery.timeago.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
