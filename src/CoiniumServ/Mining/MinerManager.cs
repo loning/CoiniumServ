@@ -38,14 +38,14 @@ using Serilog;
 namespace CoiniumServ.Mining
 {
     public class MinerManager : IMinerManager
-    {        
+    {
         public int Count { get { return _miners.Count(kvp => kvp.Value.Authenticated); } }
 
         public IList<IMiner> Miners { get { return _miners.Values.ToList(); } }
 
         public event EventHandler MinerAuthenticated;
 
-        private readonly Dictionary<int, IMiner> _miners;        
+        private readonly Dictionary<int, IMiner> _miners;
 
         private int _counter = 0; // counter for assigining unique id's to miners.
 
@@ -80,9 +80,9 @@ namespace CoiniumServ.Mining
         public IMiner GetByConnection(IConnection connection)
         {
             return (from pair in _miners  // returned the miner associated with the given connection.
-                let client = (IClient) pair.Value 
-                where client.Connection == connection 
-                select pair.Value).FirstOrDefault();
+                    let client = (IClient)pair.Value
+                    where client.Connection == connection
+                    select pair.Value).FirstOrDefault();
         }
 
         public T Create<T>(IPool pool) where T : IGetworkMiner
@@ -97,7 +97,7 @@ namespace CoiniumServ.Mining
             var instance = Activator.CreateInstance(typeof(T), @params); // create an instance of the miner.
             var miner = (IGetworkMiner)instance;
 
-            lock(_minersLock) // lock the list before we modify the collection.
+            lock (_minersLock) // lock the list before we modify the collection.
                 _miners.Add(miner.Id, miner); // add it to our collection.
 
             return (T)miner;
@@ -107,9 +107,9 @@ namespace CoiniumServ.Mining
         {
             var @params = new object[]
             {
-                _counter++, 
-                extraNonce, 
-                connection, 
+                _counter++,
+                extraNonce,
+                connection,
                 pool,
                 this,
                 _storageLayer
@@ -117,7 +117,7 @@ namespace CoiniumServ.Mining
 
             var instance = Activator.CreateInstance(typeof(T), @params);  // create an instance of the miner.
             var miner = (IStratumMiner)instance;
-            
+
             lock (_minersLock) // lock the list before we modify the collection.
                 _miners.Add(miner.Id, miner); // add it to our collection.           
 
@@ -126,17 +126,19 @@ namespace CoiniumServ.Mining
 
         public void Remove(IConnection connection)
         {
-            // find the miner associated with the connection.
-            var miner = (from pair in _miners
-                let client = (IClient) pair.Value
-                where client.Connection == connection
-                select pair.Value).FirstOrDefault();
-
-            if (miner == null) // make sure the miner exists
-                return;
-
             lock (_minersLock) // lock the list before we modify the collection.
+            {
+                // find the miner associated with the connection.
+                var miner = (from pair in _miners
+                             let client = (IClient)pair.Value
+                             where client.Connection == connection
+                             select pair.Value).FirstOrDefault();
+
+                if (miner == null) // make sure the miner exists
+                    return;
+
                 _miners.Remove(miner.Id); // remove the miner.
+            }
         }
 
         public void Authenticate(IMiner miner)
@@ -146,17 +148,17 @@ namespace CoiniumServ.Mining
 
             _logger.Debug(
                 miner.Authenticated ? "Authenticated miner: {0:l} [{1:l}]" : "Miner authentication failed: {0:l} [{1:l}]",
-                miner.Username, ((IClient) miner).Connection.RemoteEndPoint);
+                miner.Username, ((IClient)miner).Connection.RemoteEndPoint);
 
-            if (!miner.Authenticated) 
+            if (!miner.Authenticated)
                 return;
 
             if (miner is IStratumMiner) // if we are handling a stratum-miner, apply stratum specific stuff.
             {
-                var stratumMiner = (IStratumMiner) miner;
+                var stratumMiner = (IStratumMiner)miner;
 
                 stratumMiner.SetDifficulty(_poolConfig.Stratum.Diff); // set the initial difficulty for the miner and send it.
-                
+
 
                 stratumMiner.SendMessage(_poolConfig.Meta.MOTD); // send the motd.
 
