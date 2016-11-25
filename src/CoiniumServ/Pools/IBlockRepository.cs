@@ -32,6 +32,15 @@ namespace CoiniumServ.Pools
     [JsonObject(MemberSerialization.OptIn)]
     public interface IBlockRepository : IJsonService
     {
+        [JsonProperty("confirmed100")]
+        double Confirmed100 { get; }
+
+        [JsonProperty("confirmed200")]
+        double Confirmed200 { get; }
+
+        [JsonProperty("confirmed500")]
+        double Confirmed500 { get; }
+
         [JsonProperty("pending")]
         int Pending { get; }
         

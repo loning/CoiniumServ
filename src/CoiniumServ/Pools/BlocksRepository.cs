@@ -31,6 +31,9 @@ namespace CoiniumServ.Pools
 {
     public class BlocksRepository : IBlockRepository
     {
+        public double Confirmed100 { get; private set; }
+        public double Confirmed200 { get; private set; }
+        public double Confirmed500 { get; private set; }
         public int Pending { get; private set; }
         public int Confirmed { get; private set; }
         public int Orphaned { get; private set; }
@@ -85,6 +88,10 @@ namespace CoiniumServ.Pools
 
             _latestBlocks.AddRange(_storageLayer.GetBlocks(_query)); // recache latest blocks.
             _lastPaid.AddRange(_storageLayer.GetPaidBlocks(_query)); // recache last paid blocks.
+
+            Confirmed100 = _storageLayer.GetConfirmedBlocksRate(100);
+            Confirmed200 = _storageLayer.GetConfirmedBlocksRate(200);
+            Confirmed500 = _storageLayer.GetConfirmedBlocksRate(500);
 
             // recache block counts.
             var blockCounts = _storageLayer.GetTotalBlocks();

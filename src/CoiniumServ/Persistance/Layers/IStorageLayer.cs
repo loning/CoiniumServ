@@ -34,6 +34,8 @@ namespace CoiniumServ.Persistance.Layers
 {
     public interface IStorageLayer
     {
+
+        double GetConfirmedBlocksRate(int num);
         /// <summary>
         /// Is the storage layer enabled?
         /// </summary>

@@ -34,6 +34,11 @@ namespace CoiniumServ.Persistance.Layers.Null
 {
     public class NullStorage : IStorageLayer
     {
+        public double GetConfirmedBlocksRate(int num)
+        {
+            return 0;
+        }
+
         public bool IsEnabled { get; private set; }
 
         public void AddShare(IShare share)

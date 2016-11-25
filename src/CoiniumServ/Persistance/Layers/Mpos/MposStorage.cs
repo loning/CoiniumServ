@@ -31,6 +31,11 @@ namespace CoiniumServ.Persistance.Layers.Mpos
 {
     public partial class MposStorage : IStorageLayer
     {
+        public double GetConfirmedBlocksRate(int num)
+        {
+            return 0;
+        }
+
         public bool IsEnabled { get; private set; }
 
         private readonly IMySqlProvider _mySqlProvider;

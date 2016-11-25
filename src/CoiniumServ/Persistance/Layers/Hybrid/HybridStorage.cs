@@ -34,6 +34,7 @@ namespace CoiniumServ.Persistance.Layers.Hybrid
 {
     public partial class HybridStorage : IStorageLayer
     {
+        
         public bool IsEnabled { get; private set; }
 
         private readonly string _coin;

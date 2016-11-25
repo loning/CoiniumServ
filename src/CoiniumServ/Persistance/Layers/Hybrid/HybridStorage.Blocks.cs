@@ -36,6 +36,46 @@ namespace CoiniumServ.Persistance.Layers.Hybrid
 {
     public partial class HybridStorage
     {
+
+        public double GetConfirmedBlocksRate(int num)
+        {
+            double ret = 0;
+            try
+            {
+                if (!IsEnabled)
+                    return 0;
+
+                using (var connection = new MySqlConnection(_mySqlProvider.ConnectionString))
+                {
+                    var blockheight = connection.ExecuteScalar<int>(
+                        @"SELECT Height From Block 
+                            ORDER BY Height DESC LIMIT 0, @count",
+                        new
+                        {
+                            count = num
+                        });
+                    var total = connection.ExecuteScalar<int>(
+                         @"SELECT count(Height) From Block 
+                            WHERE height>@height",
+                         new
+                         {
+                             height = blockheight - num
+                         });
+                    ret = (double)total / num;
+                }
+            }
+            catch (InvalidOperationException) // fires when no result is found.
+            {
+                return 0;
+            }
+            catch (Exception e)
+            {
+                _logger.Error("An exception occured while getting block; {0:l}", e.Message);
+            }
+
+            return ret;
+        }
+
         public void AddBlock(IShare share)
         {
             try
