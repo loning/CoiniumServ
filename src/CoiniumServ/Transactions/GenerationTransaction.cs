@@ -171,13 +171,13 @@ namespace CoiniumServ.Transactions
 
 
             // generate output transactions for recipients (set in config).
-            foreach (var pair in poolConfig.Rewards)
+            /*foreach (var pair in poolConfig.Rewards)
             {
                 var amount = blockReward * pair.Value / 100; // calculate the amount he recieves based on the percent of his shares.
                 blockReward -= amount;
 
                 Outputs.AddRecipient(pair.Key, amount);
-            }
+            }*/
 
             // send the remaining coins to pool's central wallet.
             Outputs.AddPoolWallet(poolConfig.Wallet.Adress, blockReward);

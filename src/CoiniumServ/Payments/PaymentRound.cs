@@ -26,6 +26,7 @@ using System.Linq;
 using CoiniumServ.Accounts;
 using CoiniumServ.Persistance.Blocks;
 using CoiniumServ.Persistance.Layers;
+using CoiniumServ.Pools;
 
 namespace CoiniumServ.Payments
 {
@@ -40,9 +41,12 @@ namespace CoiniumServ.Payments
 
         private readonly IAccountManager _accountManager;
 
-        public PaymentRound(IPersistedBlock block, IStorageLayer storageLayer, IAccountManager accountManager)
+        private readonly IPoolConfig _poolConfig;
+
+        public PaymentRound(IPersistedBlock block, IStorageLayer storageLayer, IAccountManager accountManager, IPoolConfig poolConfig)
         {
             Block = block;
+            _poolConfig = poolConfig;
             _storageLayer = storageLayer;
             _accountManager = accountManager;
 
@@ -53,6 +57,7 @@ namespace CoiniumServ.Payments
 
         private void CalculatePayments()
         {
+            var percentRewards = (decimal)_poolConfig.Rewards.Sum(p => p.Value) / 100;
             // find total shares within the round.
             var totalShares = _shares.Sum(pair => pair.Value);
 
@@ -60,7 +65,7 @@ namespace CoiniumServ.Payments
             foreach (var pair in _shares)
             {
                 var percent = pair.Value / totalShares;
-                var amount = (decimal)percent * Block.Reward * 0.98M;
+                var amount = (decimal)percent * Block.Reward * percentRewards;
 
                 // get the user id for the payment.
                 var user = _accountManager.GetAccountByUsername(pair.Key);
