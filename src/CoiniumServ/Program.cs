@@ -23,6 +23,7 @@
 
 using System;
 using System.Globalization;
+using System.IO;
 using System.Threading;
 using CoiniumServ.Configuration;
 using CoiniumServ.Container;
@@ -72,11 +73,22 @@ namespace CoiniumServ
             // run global managers
             RunGlobalManagers(objectFactory);
 
-            while (true) // idle loop & command parser
+            if (Console.In is StreamReader)
             {
-                var line = Console.ReadLine();
-                CommandManager.Parse(line);
+                while (true) // idle loop & command parser
+                {
+                    var line = Console.ReadLine();
+                    CommandManager.Parse(line);
+                }
             }
+            else
+            {
+                while (true)
+                {
+                    Thread.Sleep(1000);
+                }
+            }
+            
         }
 
         private static void RunGlobalManagers(IObjectFactory objectFactory)
