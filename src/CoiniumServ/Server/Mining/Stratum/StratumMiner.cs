@@ -163,9 +163,9 @@ namespace CoiniumServ.Server.Mining.Stratum
             {
                 Username = user.Substring(0, user.IndexOf(".", StringComparison.Ordinal));
                 WorkerTag = user.Substring(Username.Length + 1);
-                if (!string.IsNullOrEmpty(WorkerTag) & WorkerTag.Length > 5)
+                if (!string.IsNullOrEmpty(WorkerTag) & WorkerTag.Length > 16)
                 {
-                    WorkerTag = WorkerTag.Substring(0, 5);
+                    WorkerTag = WorkerTag.Substring(0, 16);
                 }
             }
             else
