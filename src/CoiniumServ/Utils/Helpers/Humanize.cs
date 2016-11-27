@@ -39,7 +39,7 @@ namespace CoiniumServ.Utils.Helpers
             var index = -1;
             double rate = hashrate;
 
-            var units = new[] {"KH/s", "MH/s", "GH/s", "TH/s", "PH/s", "EH/s", "ZH/s", "YH/s"};
+            var units = new[] {"K SOL/s", "M SOL/s", "G SOL/s", "T SOL/s", "P SOL/s", "E SOL/s", "Z SOL/s", "Y SOL/s"};
 
             do
             {
