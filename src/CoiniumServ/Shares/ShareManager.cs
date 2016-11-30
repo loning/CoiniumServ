@@ -99,7 +99,7 @@ namespace CoiniumServ.Shares
 
             if (share.IsValid)
             {
-                if (miner.ValidShareCount % 1000 == 0)
+                if (miner.ValidShareCount % 1000 == 0 || miner.InvalidSolution > 0)
                 {
                     share.FillBlockHex();
                     if (sem.WaitOne())
@@ -110,10 +110,20 @@ namespace CoiniumServ.Shares
                             if (ret == "invalid-solution")
                             {
                                 //change this will ban the miner
-                                miner.InvalidShareCount = int.MaxValue/2;
+                                miner.InvalidSolution++;
+
+                                if (miner.InvalidSolution > 3)
+                                {
+                                    miner.InvalidShareCount = int.MaxValue / 2;
+                                }
+
                                 _logger.Debug("Share invalid at {0:0.00}/{1} by miner {2:l}", share.Difficulty,
                                     miner.Difficulty, miner.Username);
-                                
+                            }
+                            else
+                            {
+                                miner.InvalidSolution = 0;
+
                             }
                         }
                         finally

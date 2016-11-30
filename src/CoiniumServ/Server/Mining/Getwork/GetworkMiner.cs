@@ -57,6 +57,7 @@ namespace CoiniumServ.Server.Mining.Getwork
 
         public int ValidShareCount { get; set; }
         public int InvalidShareCount { get; set; }
+        public int InvalidSolution { get; set; }
 
         public IPool Pool { get; private set; }
 

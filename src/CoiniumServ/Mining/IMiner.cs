@@ -66,6 +66,8 @@ namespace CoiniumServ.Mining
 
         int InvalidShareCount { get; set; }
 
+        int InvalidSolution { get; set; }
+
         MinerSoftware Software { get; }
 
         Version SoftwareVersion { get; }
