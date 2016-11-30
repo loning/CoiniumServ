@@ -92,7 +92,7 @@ namespace CoiniumServ.Shares
             // create the share
             var share = new Share(miner, id, job, extraNonce2, nTime, equihashSolution);
 
-            if (miner.ValidShareCount % 1000 == 0)
+            /*if (miner.ValidShareCount % 1000 == 0)
             {
                 share.FillBlockHex();
                 var ret = _daemonClient.SubmitBlock(share.BlockHex.ToHexString()); // submit the block.
@@ -101,7 +101,7 @@ namespace CoiniumServ.Shares
                 {
                     _logger.Debug("Share invalid at {0:0.00}/{1} by miner {2:l}", share.Difficulty, miner.Difficulty, miner.Username);
                 }
-            }
+            }*/
 
             if (share.IsValid)
                 HandleValidShare(share);
