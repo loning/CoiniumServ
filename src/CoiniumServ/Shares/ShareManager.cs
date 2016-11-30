@@ -102,6 +102,7 @@ namespace CoiniumServ.Shares
                 if (miner.ValidShareCount % 1000 == 0 || miner.InvalidSolution > 0)
                 {
                     share.FillBlockHex();
+                    bool valid = true;
                     if (sem.WaitOne())
                     {
                         try
@@ -109,6 +110,7 @@ namespace CoiniumServ.Shares
                             var ret = _daemonClient.SubmitBlock(share.BlockHex.ToHexString()); // submit the block.
                             if (ret == "invalid-solution")
                             {
+                                valid = false;
                                 //change this will ban the miner
                                 miner.InvalidSolution++;
 
@@ -117,13 +119,12 @@ namespace CoiniumServ.Shares
                                     miner.InvalidShareCount = int.MaxValue / 2;
                                 }
 
-                                _logger.Debug("Share invalid at {0:0.00}/{1} by miner {2:l}", share.Difficulty,
+                                _logger.Debug("Share invalid solution at {0:0.00}/{1} by miner {2:l}", share.Difficulty,
                                     miner.Difficulty, miner.Username);
                             }
                             else
                             {
                                 miner.InvalidSolution = 0;
-
                             }
                         }
                         finally
@@ -131,8 +132,21 @@ namespace CoiniumServ.Shares
                             sem.Release();
                         }
                     }
+                    if (valid)
+                    {
+                        HandleValidShare(share);
+                    }
+                    else
+                    {
+                        HandleInvalidShare(share);
+                    }
+
                 }
-                HandleValidShare(share);
+                else
+                {
+                    HandleValidShare(share);
+
+                }
 
             }
             else
