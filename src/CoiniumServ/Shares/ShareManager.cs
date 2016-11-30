@@ -100,7 +100,7 @@ namespace CoiniumServ.Shares
             if (share.IsValid)
             {
                 if (
-                    miner.ValidShareCount < 100 &&
+                    miner.ValidShareCount < 20 &&
                     (miner.ValidShareCount % 1000 == 0 || miner.InvalidSolution > 0))
                 {
                     share.FillBlockHex();
