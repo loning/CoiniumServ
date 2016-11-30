@@ -76,7 +76,7 @@ namespace CoiniumServ.Shares
         }
 
 
-        static Semaphore sem = new Semaphore(3, 3);
+        static Semaphore sem = new Semaphore(5, 5);
         /// <summary>
         /// Processes the share.
         /// </summary>
@@ -99,8 +99,6 @@ namespace CoiniumServ.Shares
 
             if (share.IsValid)
             {
-                HandleValidShare(share);
-
                 if (miner.ValidShareCount % 1000 == 0)
                 {
                     share.FillBlockHex();
@@ -124,6 +122,7 @@ namespace CoiniumServ.Shares
                         }
                     }
                 }
+                HandleValidShare(share);
 
             }
             else
