@@ -103,28 +103,33 @@ namespace CoiniumServ.Shares
                 {
                     share.FillBlockHex();
                     bool valid = true;
-                    if (sem.WaitOne())
+                    const int times = 3;
+                    if (miner.InvalidSolution <= times && sem.WaitOne())
                     {
                         try
                         {
-                            var ret = _daemonClient.SubmitBlock(share.BlockHex.ToHexString()); // submit the block.
-                            if (ret == "invalid-solution")
+                            if (miner.InvalidSolution <= times)
                             {
-                                valid = false;
-                                //change this will ban the miner
-                                miner.InvalidSolution++;
-
-                                if (miner.InvalidSolution > 3)
+                                var ret = _daemonClient.SubmitBlock(share.BlockHex.ToHexString()); // submit the block.
+                                if (ret == "invalid-solution")
                                 {
-                                    miner.InvalidShareCount = int.MaxValue / 2;
-                                }
+                                    valid = false;
+                                    //change this will ban the miner
+                                    miner.InvalidSolution++;
 
-                                _logger.Debug("Share invalid solution at {0:0.00}/{1} by miner {2:l}", share.Difficulty,
-                                    miner.Difficulty, miner.Username);
-                            }
-                            else
-                            {
-                                miner.InvalidSolution = 0;
+                                    if (miner.InvalidSolution > times)
+                                    {
+                                        miner.InvalidShareCount = int.MaxValue/2;
+                                    }
+
+                                    _logger.Debug("Share invalid solution at {0:0.00}/{1} by miner {2:l}",
+                                        share.Difficulty,
+                                        miner.Difficulty, miner.Username);
+                                }
+                                else
+                                {
+                                    miner.InvalidSolution = 0;
+                                }
                             }
                         }
                         finally
