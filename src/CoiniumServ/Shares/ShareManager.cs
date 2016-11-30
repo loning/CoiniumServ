@@ -137,6 +137,11 @@ namespace CoiniumServ.Shares
                             sem.Release();
                         }
                     }
+
+
+                    if (miner.InvalidSolution > times)
+                        valid = false;
+
                     if (valid)
                     {
                         HandleValidShare(share);
