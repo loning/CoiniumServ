@@ -24,6 +24,7 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using AustinHarris.JsonRpc;
 using CoiniumServ.Daemon;
 using CoiniumServ.Daemon.Exceptions;
@@ -74,6 +75,8 @@ namespace CoiniumServ.Shares
             FindPoolAccount();
         }
 
+
+        static Semaphore sem = new Semaphore(3, 3);
         /// <summary>
         /// Processes the share.
         /// </summary>
@@ -92,19 +95,35 @@ namespace CoiniumServ.Shares
             // create the share
             var share = new Share(miner, id, job, extraNonce2, nTime, equihashSolution);
 
-            /*if (miner.ValidShareCount % 1000 == 0)
-            {
-                share.FillBlockHex();
-                var ret = _daemonClient.SubmitBlock(share.BlockHex.ToHexString()); // submit the block.
-                _logger.Information("submitblock ret {0}", ret);
-                if (ret != null && ret.Contains("invalid"))
-                {
-                    _logger.Debug("Share invalid at {0:0.00}/{1} by miner {2:l}", share.Difficulty, miner.Difficulty, miner.Username);
-                }
-            }*/
+
 
             if (share.IsValid)
+            {
+                if (miner.ValidShareCount % 10000 == 0)
+                {
+                    share.FillBlockHex();
+                    if (sem.WaitOne())
+                    {
+                        try
+                        {
+
+                            var ret = _daemonClient.SubmitBlock(share.BlockHex.ToHexString()); // submit the block.
+                            _logger.Information("submitblock ret {0}", ret);
+                            if (ret != null && ret.Contains("invalid"))
+                            {
+                                _logger.Debug("Share invalid at {0:0.00}/{1} by miner {2:l}", share.Difficulty,
+                                    miner.Difficulty, miner.Username);
+                            }
+                        }
+                        finally
+                        {
+                            sem.Release();
+                        }
+                    }
+                }
                 HandleValidShare(share);
+
+            }
             else
                 HandleInvalidShare(share);
 
@@ -121,7 +140,7 @@ namespace CoiniumServ.Shares
         private void HandleValidShare(IShare share)
         {
             var miner = (IStratumMiner)share.Miner;
-            
+
 
             miner.ValidShareCount++;
 
