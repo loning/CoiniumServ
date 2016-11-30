@@ -229,7 +229,7 @@ namespace CoiniumServ.Shares
                     exception = new OtherError("nTime out of range");
                     break;
                 default:
-                    exception=new OtherError("unknow");
+                    exception=new OtherError("unknown");
                     break;
             }
             JsonRpcContext.SetException(exception); // set the stratum exception within the json-rpc reply.
