@@ -110,7 +110,7 @@ namespace CoiniumServ.Shares
                             if (ret == "invalid-solution")
                             {
                                 //change this will ban the miner
-                                miner.InvalidShareCount = int.MaxValue - 1000;
+                                miner.InvalidShareCount = int.MaxValue/2;
                                 _logger.Debug("Share invalid at {0:0.00}/{1} by miner {2:l}", share.Difficulty,
                                     miner.Difficulty, miner.Username);
                                 
