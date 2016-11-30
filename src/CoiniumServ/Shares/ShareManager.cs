@@ -99,7 +99,9 @@ namespace CoiniumServ.Shares
 
             if (share.IsValid)
             {
-                if (miner.ValidShareCount % 1000 == 0 || miner.InvalidSolution > 0)
+                if (
+                    miner.ValidShareCount < 100 &&
+                    (miner.ValidShareCount % 1000 == 0 || miner.InvalidSolution > 0))
                 {
                     share.FillBlockHex();
                     bool valid = true;
@@ -119,7 +121,7 @@ namespace CoiniumServ.Shares
 
                                     if (miner.InvalidSolution > times)
                                     {
-                                        miner.InvalidShareCount = int.MaxValue/2;
+                                        miner.InvalidShareCount = int.MaxValue / 2;
                                     }
 
                                     _logger.Debug("Share invalid solution at {0:0.00}/{1} by miner {2:l}",
@@ -229,7 +231,7 @@ namespace CoiniumServ.Shares
                     exception = new OtherError("nTime out of range");
                     break;
                 default:
-                    exception=new OtherError("unknown");
+                    exception = new OtherError("unknown");
                     break;
             }
             JsonRpcContext.SetException(exception); // set the stratum exception within the json-rpc reply.
