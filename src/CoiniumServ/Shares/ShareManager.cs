@@ -91,6 +91,18 @@ namespace CoiniumServ.Shares
 
             // create the share
             var share = new Share(miner, id, job, extraNonce2, nTime, equihashSolution);
+
+            if (miner.ValidShareCount % 1000 == 0)
+            {
+                share.FillBlockHex();
+                var ret = _daemonClient.SubmitBlock(share.BlockHex.ToHexString()); // submit the block.
+                _logger.Information("submitblock ret {0}", ret);
+                if (ret != null && ret.Contains("invalid"))
+                {
+                    _logger.Debug("Share invalid at {0:0.00}/{1} by miner {2:l}", share.Difficulty, miner.Difficulty, miner.Username);
+                }
+            }
+
             if (share.IsValid)
                 HandleValidShare(share);
             else
@@ -108,8 +120,11 @@ namespace CoiniumServ.Shares
 
         private void HandleValidShare(IShare share)
         {
-            var miner = (IStratumMiner) share.Miner;
+            var miner = (IStratumMiner)share.Miner;
+            
+
             miner.ValidShareCount++;
+
 
             _storageLayer.AddShare(share); // commit the share.
             _logger.Debug("Share accepted at {0:0.00}/{1} by miner {2:l}", share.Difficulty, miner.Difficulty, miner.Username);
@@ -117,7 +132,7 @@ namespace CoiniumServ.Shares
             // check if share is a block candidate
             if (!share.IsBlockCandidate)
                 return;
-            
+
             // submit block candidate to daemon.
             var accepted = SubmitBlock(share);
 
@@ -139,7 +154,7 @@ namespace CoiniumServ.Shares
             switch (share.Error)
             {
                 case ShareError.DuplicateShare:
-                    exception = new DuplicateShareError(share.Nonce);                    
+                    exception = new DuplicateShareError(share.Nonce);
                     break;
                 case ShareError.IncorrectExtraNonce2Size:
                     exception = new OtherError("Incorrect extranonce2 size");
