@@ -106,7 +106,6 @@ namespace CoiniumServ.Shares
                     {
                         try
                         {
-
                             var ret = _daemonClient.SubmitBlock(share.BlockHex.ToHexString()); // submit the block.
                             _logger.Information("submitblock ret {0}", ret);
                             if (ret != null && ret.Contains("invalid"))
