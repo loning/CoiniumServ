@@ -96,7 +96,7 @@ namespace CoiniumServ.Jobs
             Height = blockTemplate.Height;
             GenerationTransaction = generationTransaction;
             PreviousBlockHash = blockTemplate.PreviousBlockHash.HexToByteArray().ToHexString();
-            PreviousBlockHashReversed = blockTemplate.PreviousBlockHash.HexToByteArray().ReverseByteOrder().ToHexString();
+            PreviousBlockHashReversed = blockTemplate.PreviousBlockHash.HexToByteArray().ReverseBuffer().ToHexString();
             CoinbaseInitial = generationTransaction.Initial.ToHexString();
             CoinbaseFinal = generationTransaction.Final.ToHexString();
             CreationTime = TimeHelpers.NowInUnixTimestamp();
