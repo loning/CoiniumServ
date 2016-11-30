@@ -99,6 +99,8 @@ namespace CoiniumServ.Shares
 
             if (share.IsValid)
             {
+                HandleValidShare(share);
+
                 if (miner.ValidShareCount % 1000 == 0)
                 {
                     share.FillBlockHex();
@@ -122,7 +124,6 @@ namespace CoiniumServ.Shares
                         }
                     }
                 }
-                HandleValidShare(share);
 
             }
             else
